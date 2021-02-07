@@ -51,7 +51,7 @@ const AddCryptoScreen = ({ navigation }) => {
       );
       const resJSON = await res.json();
       dispatch(addCurrency({ added: resJSON }));
-      navigation.replace("Home");
+      navigation.goBack();
     }
   };
 
