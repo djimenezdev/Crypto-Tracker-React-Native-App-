@@ -4,28 +4,40 @@ import React from "react";
 import { SafeAreaView } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "react-native-elements";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { db } from "../app/firebase";
+import { getOtherInfo } from "../Slice/authProfileSlice";
 import { removeCurrency } from "../Slice/trackedCryptoSlice";
 
-const TrackedList = ({ symbol, name, price, percentage, currencies }) => {
+const TrackedList = ({
+  currency: { symbol, name, price, percentage },
+  currencies,
+}) => {
   const dispatch = useDispatch();
+  const userLogin = useSelector(getOtherInfo);
 
   const deleteTracked = () => {
-    let currenciesClone = [...currencies];
-    const match = currenciesClone.findIndex(
-      (currency) => currency.data.name === name
+    db?.collection("userCurrencies")
+      .doc(`${userLogin?.userMeta?.email}`)
+      .collection("selectedCurrencies")
+      .doc(`${symbol}`)
+      .delete();
+
+    const currenciesClone = [...currencies];
+    const currencyFilter = currenciesClone?.filter(
+      ({ name: nameM }) => nameM !== name
     );
-    currenciesClone.splice(match, 1);
-    dispatch(removeCurrency({ removed: [...currenciesClone] }));
+
+    dispatch(removeCurrency({ removed: [...currencyFilter] }));
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
+      <View style={styles.view}>
         <Text style={styles.topStyle}>{name}</Text>
         <Text style={styles.bottomStyle}>{symbol}</Text>
       </View>
-      <View>
+      <View style={styles.view}>
         <Text style={styles.topStyle}>${price}</Text>
         <Text style={styles.bottomStyle}>{percentage}%</Text>
         <Button
@@ -44,22 +56,16 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     backgroundColor: "#fff",
-    width: 410,
-    height: 110,
     justifyContent: "space-between",
   },
+  view: {
+    padding: 20,
+  },
   topStyle: {
-    padding: 10,
     fontWeight: "800",
   },
-  bottomStyle: {
-    paddingLeft: 10,
-  },
   deleteButton: {
-    color: "red",
     marginTop: 10,
-    paddingLeft: 10,
-    height: 34,
-    marginRight: 10,
+    color: "red",
   },
 });
