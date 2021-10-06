@@ -7,19 +7,30 @@ export const trackedCryptoSlice = createSlice({
     selectedCurrencies: [],
   },
   reducers: {
+    allCurrencyFetch: (state, action) => {
+      state.selectedCurrencies = action.payload.all;
+    },
     addCurrency: (state, action) => {
       state.selectedCurrencies = [
         ...state.selectedCurrencies,
-        action.payload.added,
+        action.payload.all,
       ];
     },
     removeCurrency: (state, action) => {
       state.selectedCurrencies = action.payload.removed;
     },
+    clearCurrencies: (state) => {
+      state.selectedCurrencies = [];
+    },
   },
 });
 
-export const { addCurrency, removeCurrency } = trackedCryptoSlice.actions;
+export const {
+  allCurrencyFetch,
+  addCurrency,
+  removeCurrency,
+  clearCurrencies,
+} = trackedCryptoSlice.actions;
 
 export const getSelectedCurrencies = (state) => state.crypto.selectedCurrencies;
 
