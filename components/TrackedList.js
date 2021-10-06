@@ -10,7 +10,7 @@ import { getOtherInfo } from "../Slice/authProfileSlice";
 import { removeCurrency } from "../Slice/trackedCryptoSlice";
 
 const TrackedList = ({
-  currency: { symbol, name, price, percentage },
+  currency: { symbol, name, price, percent },
   currencies,
 }) => {
   const dispatch = useDispatch();
@@ -35,11 +35,11 @@ const TrackedList = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.view}>
         <Text style={styles.topStyle}>{name}</Text>
-        <Text style={styles.bottomStyle}>{symbol}</Text>
+        <Text>{symbol}</Text>
       </View>
       <View style={styles.view}>
         <Text style={styles.topStyle}>${price}</Text>
-        <Text style={styles.bottomStyle}>{percentage}%</Text>
+        <Text>{percent}%</Text>
         <Button
           style={styles.deleteButton}
           onPress={deleteTracked}
